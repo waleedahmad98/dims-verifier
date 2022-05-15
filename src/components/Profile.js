@@ -6,6 +6,7 @@ import {
 import axios from 'axios';
 import { CHAIN_TYPE, BASE_API_URL } from '../config';
 import ManualVerification from './ManualVerification';
+import AutomaticVerification from './AutomaticVerification';
 
 export const Profile = ({ userData, userSession, handleSignOut }) => {
   const person = new Person(userData.profile);
@@ -34,7 +35,7 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
   return (
     <div className="container">
       <div className='d-flex flex-row justify-content-between mt-5'>
-        {reveal === 0 ? <button className='reveal-btn' onClick={() => { setReveal(1) }}>REVEAL ADDRESS</button> : <><button className='reveal-btn' data-bs-dismiss="alert" onClick={() => {
+        {reveal === 0 ? <button className='anim-btn anim-btn-sm' onClick={() => { setReveal(1) }}>REVEAL ADDRESS</button> : <><button className='anim-btn anim-btn-sm' data-bs-dismiss="alert" onClick={() => {
           navigator.clipboard.writeText(CHAIN_TYPE === "testnet" ? person._profile.stxAddress.testnet : person._profile.stxAddress.mainnet)
           setReveal(0);
 
@@ -46,8 +47,8 @@ export const Profile = ({ userData, userSession, handleSignOut }) => {
       </div>
       {mode === 0 ? <div className='d-flex flex-column align-items-center'>
         <button className='btn1 btn-lg mt-5 w-50' onClick={()=>{setMode(1)}}>Manual Verification</button>
-        <button className='btn1 btn-lg mt-2 w-50' onClick={()=>{alert("This feature is not yet implemented!")}}>Automatic Request Verification</button>
-      </div> : <>{mode === 1 ? <ManualVerification/> : <></>}</>}
+        <button className='btn1 btn-lg mt-2 w-50' onClick={()=>{setMode(2)}}>Automatic Request Verification</button>
+      </div> : <>{mode === 1 ? <ManualVerification setMode={setMode} /> : <><AutomaticVerification address={person._profile.stxAddress.testnet}/></>}</>}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import MD5 from 'crypto-js/md5';
 import axios from 'axios';
 
-export default function ManualVerification() {
+export default function ManualVerification(props) {
     const [owner, setOwner] = useState("")
     const [txid, setTxid] = useState("")
     const [file, setFile] = useState("")
@@ -72,6 +72,7 @@ export default function ManualVerification() {
 
                     <input type="file" id="file" onChange={(e) => { setFile(e.target.files[0]) }} /><br />
                     <button type="submit" className='btn1 btn-md mt-5'>Verify</button>
+                    <button className='btn1 btn-md mt-5 ms-3' onClick={()=>{props.setMode(0)}}>Back</button>
                 </form>
             </div>
             <div className='mt-5'>{svg}{text}</div>
