@@ -1,15 +1,16 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import { CHAIN_TYPE } from '../config';
+import { signECDSA, verifyECDSA } from '@stacks/encryption';
 
 export default function UnverifiedCredentials(props) {
     const [uvc, setUvc] = useState([]);
     const [zeroCheck, setZeroCheck] = useState(false)
     const [veriferMode, setVerifierMode] = useState(0)
     const [currvc, setCurrvc] = useState(null)
+    const [status, setStatus] = useState('')
 
     useEffect(() => {
-        console.log("add", props.address)
         axios.get(`http://localhost:8000/api/sharedDocs/${props.address}`).then(r => {
             if (r.data.vc.length === 0) {
                 setZeroCheck(true)
@@ -24,7 +25,26 @@ export default function UnverifiedCredentials(props) {
             setCurrvc(r.data)
             setVerifierMode(1)
             props.setDisplay(1)
-            console.log(r.data.contract_call.function_args[1].repr)
+            try {
+                let pubKey = r.data.contract_call.function_args[4].repr.replace('"', "").replace('"', "")
+                let hash = r.data.contract_call.function_args[1].repr.replace('"', "").replace('"', "")
+                const result = verifyECDSA(hash, pubKey, vc.signature);
+                if (result) {
+                    setStatus('VALID')
+                }
+                else {
+                    setStatus('INVALID')
+                }
+            }
+            catch (e) {
+                setStatus('INVALID')
+            }
+            axios.post("http://localhost:8000/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.rcvr, result: status }).then(r => {
+                if (r.data.code === 1){
+                    axios.delete("http://localhost:8000/api/docs", {headers: {}, data: {"objectid": vc._id}})
+                }
+            })
+
         })
 
     }
@@ -101,9 +121,11 @@ export default function UnverifiedCredentials(props) {
                             <div style={{ fontWeight: "700", fontSize: "2rem" }}>Issued By</div>
                             <h6 class="mb-4" style={{ fontSize: "1.5rem" }} >{currvc.sender_address !== undefined ? <>{currvc.sender_address}</> : <></>}</h6>
                             <button className='card-btn me-3 py-3' onClick={() => { window.open(`https://explorer.stacks.co/txid/${currvc.tx_id}?chain=${CHAIN_TYPE}`, "_blank") }}>DETAILS</button>
-                        </div>
 
+                        </div>
                     </div>
+                    <div style={{ fontWeight: "700", fontSize: "2rem" }}>{status}</div>
+
                 </div>
             </>
         )

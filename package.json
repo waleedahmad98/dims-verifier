@@ -5,6 +5,7 @@
   "dependencies": {
     "@stacks/connect": "^6.4.1",
     "@stacks/connect-react": "^13.0.2",
+    "@stacks/encryption": "^4.0.1",
     "@stacks/storage": "^3.5.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
