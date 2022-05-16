@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import UnverifiedCredentials from './UnverifiedCredentials'
+import VerifiedCredentials from './VerifiedCredentials'
 
 export default function AutomaticVerification(props) {
     const [toggler, setToggler] = useState("Verification Records")
@@ -30,7 +31,7 @@ export default function AutomaticVerification(props) {
                     </div>
                 </> : <></>}
 
-            </div>{mode === 0 ? <UnverifiedCredentials address={props.address} setDisplay={setDisplay}/> : <></>}
+            </div>{mode === 0 ? <UnverifiedCredentials address={props.address} setDisplay={setDisplay}/> : <VerifiedCredentials address={props.address}/>}
         </div>
     )
 }

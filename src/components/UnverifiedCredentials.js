@@ -31,19 +31,24 @@ export default function UnverifiedCredentials(props) {
                 const result = verifyECDSA(hash, pubKey, vc.signature);
                 if (result) {
                     setStatus('VALID')
+                    axios.post("http://localhost:8000/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "VALID" }).then(r => {
+                        if (r.data.code === 1) {
+                            axios.delete("http://localhost:8000/api/docs", { headers: {}, data: { "objectid": vc._id } })
+                        }
+                    })
                 }
                 else {
-                    setStatus('INVALID')
+                    axios.post("http://localhost:8000/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "INVALID" }).then(r => {
+                        if (r.data.code === 1) {
+                            axios.delete("http://localhost:8000/api/docs", { headers: {}, data: { "objectid": vc._id } })
+                        }
+                    })
                 }
             }
             catch (e) {
                 setStatus('INVALID')
             }
-            axios.post("http://localhost:8000/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.rcvr, result: status }).then(r => {
-                if (r.data.code === 1){
-                    axios.delete("http://localhost:8000/api/docs", {headers: {}, data: {"objectid": vc._id}})
-                }
-            })
+
 
         })
 
