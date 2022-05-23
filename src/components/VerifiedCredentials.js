@@ -6,7 +6,7 @@ export default function VerifiedCredentials(props) {
     const [vc, setVc] = useState([])
     const [zeroCheck, setZeroCheck] = useState(false)
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/history/${props.address}`).then(r => {
+        axios.get(`https://dims-backend.herokuapp.com/api/history/${props.address}`).then(r => {
             console.log(r)
             if (r.data.length === 0) {
                 setZeroCheck(true)

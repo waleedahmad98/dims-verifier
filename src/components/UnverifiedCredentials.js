@@ -11,7 +11,7 @@ export default function UnverifiedCredentials(props) {
     const [status, setStatus] = useState('')
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/sharedDocs/${props.address}`).then(r => {
+        axios.get(`https://dims-backend.herokuapp.com/api/sharedDocs/${props.address}`).then(r => {
             if (r.data.vc.length === 0) {
                 setZeroCheck(true)
             }
@@ -31,16 +31,16 @@ export default function UnverifiedCredentials(props) {
                 const result = verifyECDSA(hash, pubKey, vc.signature);
                 if (result) {
                     setStatus('VALID')
-                    axios.post("http://localhost:8000/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "VALID" }).then(r => {
+                    axios.post("https://dims-backend.herokuapp.com/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "VALID" }).then(r => {
                         if (r.data.code === 1) {
-                            axios.delete("http://localhost:8000/api/docs", { headers: {}, data: { "objectid": vc._id } })
+                            axios.delete("https://dims-backend.herokuapp.com/api/docs", { headers: {}, data: { "objectid": vc._id } })
                         }
                     })
                 }
                 else {
-                    axios.post("http://localhost:8000/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "INVALID" }).then(r => {
+                    axios.post("https://dims-backend.herokuapp.com/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "INVALID" }).then(r => {
                         if (r.data.code === 1) {
-                            axios.delete("http://localhost:8000/api/docs", { headers: {}, data: { "objectid": vc._id } })
+                            axios.delete("https://dims-backend.herokuapp.com/api/docs", { headers: {}, data: { "objectid": vc._id } })
                         }
                     })
                 }
