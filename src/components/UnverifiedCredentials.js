@@ -46,6 +46,7 @@ export default function UnverifiedCredentials(props) {
                 }
             }
             catch (e) {
+                console.log(e)
                 setStatus('INVALID')
             }
 
