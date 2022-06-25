@@ -24,7 +24,7 @@ export default function VerifiedCredentials(props) {
                     <div class="card-body">
                         <div className='d-flex justify-content-between'>
                             <h5 class="card-title mb-4" style={{ fontWeight: "700" }}><span style={{ fontWeight: "300", fontSize: "medium" }}>Shared by <br /></span>{vc.senderAddress}</h5>
-                            <h5 class="card-title mb-4" style={{ fontWeight: "700" }}><span style={{ fontWeight: "300", fontSize: "medium" }}>Validity <br /></span>{vc.result}</h5>
+                            <h5 class="card-title ms-2 mb-4" style={{ fontWeight: "700" }}><span style={{ fontWeight: "300", fontSize: "medium" }}>Validity <br /></span>{vc.result}</h5>
                         </div>
                         <div className='d-flex flex-row'>
                             <button className='card-btn me-3' onClick={() => { window.open(`https://explorer.stacks.co/txid/${vc.txid}?chain=${CHAIN_TYPE}`, "_blank") }}>DETAILS</button>

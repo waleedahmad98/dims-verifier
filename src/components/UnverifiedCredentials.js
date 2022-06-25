@@ -30,7 +30,7 @@ export default function UnverifiedCredentials(props) {
                 let hash = r.data.contract_call.function_args[1].repr.replace('"', "").replace('"', "")
                 const result = verifyECDSA(hash, pubKey, vc.signature);
                 if (result) {
-                    setStatus('VALID')
+                    setStatus(<img src="https://img.icons8.com/color/256/000000/approval--v3.png" />)
                     axios.post("https://dims-backend.herokuapp.com/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "VALID" }).then(r => {
                         if (r.data.code === 1) {
                             axios.delete("https://dims-backend.herokuapp.com/api/docs", { headers: {}, data: { "objectid": vc._id } })
@@ -38,6 +38,7 @@ export default function UnverifiedCredentials(props) {
                     })
                 }
                 else {
+                    setStatus(<img src="https://img.icons8.com/color/256/000000/delete-sign--v1.png" />)
                     axios.post("https://dims-backend.herokuapp.com/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "INVALID" }).then(r => {
                         if (r.data.code === 1) {
                             axios.delete("https://dims-backend.herokuapp.com/api/docs", { headers: {}, data: { "objectid": vc._id } })
@@ -46,8 +47,12 @@ export default function UnverifiedCredentials(props) {
                 }
             }
             catch (e) {
-                console.log(e)
-                setStatus('INVALID')
+                setStatus(<img src="https://img.icons8.com/color/256/000000/delete-sign--v1.png" />)
+                axios.post("https://dims-backend.herokuapp.com/api/move", { sender: r.data.contract_call.function_args[0].repr, txid: r.data.tx_id, signature: vc.signature, rcvr: vc.sharedWith, result: "INVALID" }).then(r => {
+                    if (r.data.code === 1) {
+                        axios.delete("https://dims-backend.herokuapp.com/api/docs", { headers: {}, data: { "objectid": vc._id } })
+                    }
+                })
             }
 
 
