@@ -2,6 +2,9 @@
   "name": "dims-verifier",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "16.14.0"
+  },
   "dependencies": {
     "@stacks/connect": "^6.4.1",
     "@stacks/connect-react": "^13.0.2",
